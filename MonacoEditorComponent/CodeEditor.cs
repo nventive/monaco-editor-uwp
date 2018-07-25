@@ -160,13 +160,17 @@ namespace Monaco
 
             _view = (WebView)GetTemplateChild("View");
 
+			Console.WriteLine("Got WebView");
+
             if (_view != null)
             {
                 _view.NavigationStarting += WebView_NavigationStarting;
                 _view.DOMContentLoaded += WebView_DOMContentLoaded;
                 _view.NavigationCompleted += WebView_NavigationCompleted;
                 _view.NewWindowRequested += WebView_NewWindowRequested;
-                _view.Source = new Uri("ms-appx-web:///Monaco/MonacoEditor.html");
+
+                _view.Source = new Uri("/MonacoEditor.html",UriKind.RelativeOrAbsolute );
+				Console.WriteLine($"Navigating to {_view.Source}");
             }
 
             base.OnApplyTemplate();
@@ -199,7 +203,7 @@ namespace Monaco
             else
             {
                 #if DEBUG
-                Debug.WriteLine("WARNING: Tried to call '" + script + "' before initialized.");
+                System.Diagnostics.Debug.WriteLine("WARNING: Tried to call '" + script + "' before initialized.");
                 #endif
             }
 
@@ -261,7 +265,7 @@ namespace Monaco
             else
             {
                 #if DEBUG
-                Debug.WriteLine("WARNING: Tried to call " + method + " before initialized.");
+                System.Diagnostics.Debug.WriteLine("WARNING: Tried to call " + method + " before initialized.");
                 #endif
             }
 

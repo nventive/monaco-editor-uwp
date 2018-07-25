@@ -21,7 +21,7 @@
 
     <div id="container" onkeydown="keyDown(event)"></div>
 
-    <script src="ms-appx-web:///Monaco/monaco-editor/min/vs/loader.js"></script>
+    <script src="monaco-editor/min/vs/loader.js"></script>
     <script>
         var editor;
         var model;
@@ -29,10 +29,10 @@
         var decorations = [];
         var modifingSelection = false; // Supress updates to selection when making edits.
 
-        Debug.log("Starting Monaco Load");
-        require.config({ paths: { 'vs': 'ms-appx-web:///Monaco/monaco-editor/min/vs' }});
+        console.log("Starting Monaco Load");
+        require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
         require(['vs/editor/editor.main'], function () {
-            Debug.log("Grabbing Monaco Options");
+            console.log("Grabbing Monaco Options");
 
             let opt = getOptions();
             opt["value"] = Parent.getValue("Text");
@@ -78,7 +78,7 @@
             document.body.style.overflow = 'hidden';
 
             // Callback to Parent that we're loaded
-            Debug.log("Loaded Monaco");
+            console.log("Loaded Monaco");
             Parent.callAction("Loaded");
         });
 

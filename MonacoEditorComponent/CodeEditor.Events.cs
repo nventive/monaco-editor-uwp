@@ -47,7 +47,7 @@ namespace Monaco
         private void WebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
             #if DEBUG
-            Debug.WriteLine("DOM Content Loaded");
+            System.Diagnostics.Debug.WriteLine("DOM Content Loaded");
             #endif
             this._initialized = true;
         }
@@ -75,7 +75,7 @@ namespace Monaco
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             #if DEBUG
-            Debug.WriteLine("Navigation Starting");
+            System.Diagnostics.Debug.WriteLine("Navigation Starting");
             #endif
             _parentAccessor = new ParentAccessor(this);
             _parentAccessor.AddAssemblyForTypeLookup(typeof(Range).GetTypeInfo().Assembly);

@@ -80,7 +80,7 @@ namespace MonacoEditorTestApp
         /// <param name="e">Details about the navigation failure</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+            throw new Exception($"Failed to load Page {e.SourcePageType.FullName}: {e.Exception}");
         }
 
         /// <summary>
