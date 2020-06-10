@@ -65,9 +65,9 @@
                 "2": "Dark"
             }[theme];
             if (theme == "Default") {
-                theme = Theme.currentThemeName.toString();
+                theme = Theme.getCurrentThemeName().toString();
             }
-            changeTheme(theme, Theme.isHighContrast.toString());
+            changeTheme(theme, Theme.getIsHighContrast().toString());
 
             // Update Monaco Size when we receive a window resize event
             window.addEventListener("resize", () => {
@@ -189,8 +189,9 @@
 
         var getOptions = function () {
             let opt = null;
-            try {
-                opt = JSON.parse(Parent.getJsonValue("Options"));
+			try {
+				var t = Parent.getJsonValue("Options");
+                opt = JSON.parse(t);
             } finally {
 
             }

@@ -17,15 +17,15 @@ using Windows.UI.Xaml.Controls;
 
 namespace Monaco
 {
-    /// <summary>
+	/// <summary>
     /// UWP Windows Runtime Component wrapper for the Monaco CodeEditor
     /// https://microsoft.github.io/monaco-editor/
     /// </summary>
-    [TemplatePart(Name = "View", Type = typeof(WebView))]
+    //[TemplatePart(Name = "View", Type = typeof(ICodeEditorPresenter))]
     public sealed partial class CodeEditor : Control, INotifyPropertyChanged
     {
-        private bool _initialized;
-        private WebView _view;
+        private bool _initialized = true;
+        private ICodeEditorPresenter _view;
         private ModelHelper _model;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -131,7 +131,7 @@ namespace Monaco
                 _view.DOMContentLoaded -= WebView_DOMContentLoaded;
                 _view.NavigationCompleted -= WebView_NavigationCompleted;
                 _view.NewWindowRequested -= WebView_NewWindowRequested;
-                _initialized = false;
+                //_initialized = false;
             }
 
             Decorations.VectorChanged -= Decorations_VectorChanged;
@@ -158,7 +158,7 @@ namespace Monaco
                 _initialized = false;
             }
 
-            _view = (WebView)GetTemplateChild("View");
+            _view = (ICodeEditorPresenter)GetTemplateChild("View");
 
 			Console.WriteLine("Got WebView");
 
@@ -172,6 +172,10 @@ namespace Monaco
                 _view.Source = new Uri("/MonacoEditor.html",UriKind.RelativeOrAbsolute );
 				Console.WriteLine($"Navigating to {_view.Source}");
             }
+			else
+			{
+				Console.Error.WriteLine("********************** NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+			}
 
             base.OnApplyTemplate();
         }
@@ -264,8 +268,9 @@ namespace Monaco
             }
             else
             {
-                #if DEBUG
-                System.Diagnostics.Debug.WriteLine("WARNING: Tried to call " + method + " before initialized.");
+				#if DEBUG
+				Console.Error.WriteLine("WARNING: Tried to call " + method + " before initialized.");
+				System.Diagnostics.Debug.WriteLine("WARNING: Tried to call " + method + " before initialized.");
                 #endif
             }
 

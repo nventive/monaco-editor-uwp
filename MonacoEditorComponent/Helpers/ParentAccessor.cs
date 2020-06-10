@@ -14,7 +14,7 @@ namespace Monaco.Helpers
     /// Not Thread Safe.
     /// </summary>
     [AllowForWeb]
-    public sealed class ParentAccessor : IDisposable
+    public sealed partial class ParentAccessor : IDisposable
     {
         private WeakReference<IParentAccessorAcceptor> parent;
         private Type typeinfo;
@@ -27,7 +27,7 @@ namespace Monaco.Helpers
         /// Constructs a new reflective parent Accessor for the provided object.
         /// </summary>
         /// <param name="parent">Object to provide Property Access.</param>
-        public ParentAccessor(IParentAccessorAcceptor parent)
+        public ParentAccessor(IParentAccessorAcceptor parent) : this()
         { 
             this.parent = new WeakReference<IParentAccessorAcceptor>(parent);
             typeinfo = parent.GetType();
@@ -176,8 +176,8 @@ namespace Monaco.Helpers
         /// <param name="value"></param>
         /// <param name="type"></param>
         public void SetValue(string name, string value, string type)
-        {
-            if (parent.TryGetTarget(out IParentAccessorAcceptor tobj))
+		{
+			if (parent.TryGetTarget(out IParentAccessorAcceptor tobj))
             {
                 var propinfo = typeinfo.GetProperty(name);
                 var typeobj = LookForTypeByName(type);

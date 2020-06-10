@@ -18,7 +18,7 @@ namespace Monaco.Helpers
     /// and Signals an Event when they occur.
     /// </summary>
     [AllowForWeb]
-    public sealed class ThemeListener
+    public sealed partial class ThemeListener
     {
         public string CurrentThemeName { get { return this.CurrentTheme.ToString(); } } // For Web Retrieval
 
@@ -31,16 +31,20 @@ namespace Monaco.Helpers
         private UISettings _settings = new UISettings();
 
         public ThemeListener()
-        {
-            CurrentTheme = Application.Current.RequestedTheme;
+		{
+			CurrentTheme = Application.Current.RequestedTheme;
             IsHighContrast = _accessible.HighContrast;
 
             _accessible.HighContrastChanged += _accessible_HighContrastChanged;
             _settings.ColorValuesChanged += _settings_ColorValuesChanged;
 
             // Fallback in case either of the above fail, we'll check when we get activated next.
-            Window.Current.CoreWindow.Activated += CoreWindow_Activated; 
-        }
+            Window.Current.CoreWindow.Activated += CoreWindow_Activated;
+
+			PartialCtor();
+		}
+
+		partial void PartialCtor();
 
         ~ThemeListener()
         {

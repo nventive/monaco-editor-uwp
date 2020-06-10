@@ -81,11 +81,11 @@ namespace Monaco
             _parentAccessor.AddAssemblyForTypeLookup(typeof(Range).GetTypeInfo().Assembly);
             _parentAccessor.RegisterAction("Loaded", CodeEditorLoaded);
 
-            _themeListener = new ThemeListener();
-            _themeListener.ThemeChanged += _themeListener_ThemeChanged;
-            _themeToken = RegisterPropertyChangedCallback(RequestedThemeProperty, RequestedTheme_PropertyChanged);
+			_themeListener = new ThemeListener();
+			_themeListener.ThemeChanged += _themeListener_ThemeChanged;
+			_themeToken = RegisterPropertyChangedCallback(RequestedThemeProperty, RequestedTheme_PropertyChanged);
 
-            _keyboardListener = new KeyboardListener(this);
+			_keyboardListener = new KeyboardListener(this);
 
             this._view.AddWebAllowedObject("Debug", new DebugLogger());
             this._view.AddWebAllowedObject("Parent", _parentAccessor);

@@ -59,9 +59,28 @@ namespace MonacoEditorTestApp
         {
             if (string.IsNullOrWhiteSpace(CodeContent))
             {
-                CodeContent = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Content.txt")));
+                //CodeContent = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Content.txt")));
+				CodeContent = @"public class Program { // http://www.github.com/
+	public static void Main(string[] args) {
+		Console.WriteLine(\""Hello, World!\"");
+	}
 
-                ButtonHighlightRange_Click(null, null);
+	/*
+	 * Things to Try:
+	 * - Hover over the word 'Hit'
+	 * - Hit F1 and Search for 'TestAction'
+	 * - Press Ctrl+Enter
+	 * - After using Ctrl+Enter, hit F5
+	 * - Hit Ctrl+L
+	 * - Hit Ctrl+U
+	 * - Hit Ctrl+W
+	 * - Type the letter 'c'
+	 * - Type the word 'boo'
+	 * - Type 'foreach' to see Snippet.
+	 */
+}";
+
+				ButtonHighlightRange_Click(null, null);
             }
 
             // Ready for Code

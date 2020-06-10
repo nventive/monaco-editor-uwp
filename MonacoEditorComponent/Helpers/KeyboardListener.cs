@@ -26,11 +26,11 @@ namespace Monaco.Helpers
     }
 
     [AllowForWeb]
-    public sealed class KeyboardListener
+    public sealed partial class KeyboardListener
     {
         private WeakReference<CodeEditor> parent;
 
-        public KeyboardListener(CodeEditor parent) // TODO: Make Interface for event usage
+        public KeyboardListener(CodeEditor parent) : this() // TODO: Make Interface for event usage
         {
             this.parent = new WeakReference<CodeEditor>(parent);
         }

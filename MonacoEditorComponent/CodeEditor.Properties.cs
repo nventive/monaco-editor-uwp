@@ -30,6 +30,8 @@ namespace Monaco
             DependencyProperty.Register("Text", typeof(string), typeof(CodeEditor), new PropertyMetadata(string.Empty, (d, e) => {
                 if (!(d as CodeEditor).IsSettingValue)
                 {
+					Console.Error.WriteLine("Updating source code of " + (d as CodeEditor) + " : " + e.NewValue.ToString());
+
                     (d as CodeEditor)?.InvokeScriptAsync("updateContent", e.NewValue.ToString());
                 }
             }));
