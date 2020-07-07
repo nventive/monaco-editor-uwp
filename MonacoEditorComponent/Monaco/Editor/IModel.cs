@@ -1,32 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 
 namespace Monaco.Editor
 {
-    #pragma warning disable CS1591
-    /// <summary>
-    /// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/editorCommon.ts#L228
-    /// </summary>
-    public enum EndOfLinePreference
-    {
-        TextDefined = 0,
-        LF = 1,
-        CRLF = 2
-    }
-
-    /// <summary>
-    /// https://github.com/Microsoft/vscode/blob/master/src/vs/editor/common/editorCommon.ts#L260
-    /// </summary>
-    public enum EndOfLineSequence
-    {
-        LF = 0,
-        CRLF = 1
-    }
-
     /// <summary>
     /// https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.imodel.html
     /// </summary>
@@ -34,15 +12,57 @@ namespace Monaco.Editor
     {
         // TODO: Events
 
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         string Id { get; }
+        [JsonProperty("uri", NullValueHandling = NullValueHandling.Ignore)]
         Uri Uri { get; }
 
         //IIdentifiedSingleEditOperation[] ApplyEditsAsync(IIdentifiedSingleEditOperation[] operations)
         //DeltaDecorationsAsync
         IAsyncAction DetectIndentationAsync(bool defaultInsertSpaces, bool defaultTabSize);
-        //FindMatchesAsync(string searchString, bool searchOnlyEditableRange, bool isRegex, ...)
-        //FindNextMatchAsync
-        //FindPreviousMatchAsync
+
+        /// <summary>
+        /// Search the model.
+        /// </summary>
+        /// <returns>
+        /// The ranges where the matches are. It is empty if not matches have been found.
+        /// 
+        /// </returns>
+        [DefaultOverload]
+        IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, bool searchOnlyEditableRange, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches);
+
+        [DefaultOverload]
+        IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, bool searchOnlyEditableRange, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches, double limitResultCount);
+
+        /// <summary>
+        /// Search the model.
+        /// </summary>
+        /// <returns>
+        /// The ranges where the matches are. It is empty if no matches have been found.
+        /// 
+        /// </returns>
+        IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, IRange searchScope, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches);
+
+        IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, IRange searchScope, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches, double limitResultCount);
+
+        /// <summary>
+        /// Search the model for the next match. Loops to the beginning of the model if needed.
+        /// </summary>
+        /// <returns>
+        /// The range where the next match is. It is null if no next match has been found.
+        /// 
+        /// </returns>
+        IAsyncOperation<FindMatch> FindNextMatchAsync(string searchString, IPosition searchStart, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches);
+
+        /// <summary>
+        /// Search the model for the previous match. Loops to the end of the model if needed.
+        /// </summary>
+        /// <returns>
+        /// The range where the previous match is. It is null if no previous match has been found.
+        /// 
+        /// </returns>
+        IAsyncOperation<FindMatch> FindPreviousMatchAsync(string searchString, IPosition searchStart, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches);
+
         //GetAllDecorationsAsync
         IAsyncOperation<uint> GetAlternativeVersionIdAsync();
         //GetDecorationOptionsAsync
@@ -76,8 +96,8 @@ namespace Monaco.Editor
         IAsyncOperation<uint> GetValueLengthAsync(EndOfLinePreference eol, bool preserveBOM);
         IAsyncOperation<uint> GetValueLengthInRangeAsync(IRange range);
         IAsyncOperation<uint> GetVersionIdAsync();
-        IAsyncOperation<IWordAtPosition> GetWordAtPositionAsync(IPosition position);
-        IAsyncOperation<IWordAtPosition> GetWordUntilPositionAsync(IPosition position);
+        IAsyncOperation<WordAtPosition> GetWordAtPositionAsync(IPosition position);
+        IAsyncOperation<WordAtPosition> GetWordUntilPositionAsync(IPosition position);
         IAsyncOperation<Position> ModifyPositionAsync(IPosition position, int number);
         IAsyncOperation<string> NormalizeIndentationAsync(string str);
         //PushEditOperationsAsync
@@ -88,5 +108,4 @@ namespace Monaco.Editor
         IAsyncOperation<Position> ValidatePositionAsync(IPosition position);
         IAsyncOperation<Range> ValidateRangeAsync(IRange range);
     }
-    #pragma warning restore CS1591
-}
+    }

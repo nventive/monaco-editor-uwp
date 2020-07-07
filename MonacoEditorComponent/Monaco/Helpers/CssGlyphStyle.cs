@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Monaco.Helpers
+﻿namespace Monaco.Helpers
 {
     public sealed class CssGlyphStyle : ICssStyle
     {
-        public Uri GlyphImage { get; set; }
+        public System.Uri GlyphImage { get; set; }
 
-        public string Name { get; private set; }
+        public uint Id { get; }
+
+        public string Name { get; }
 
         public CssGlyphStyle()
         {
-            Name = CssStyleBroker.Instance.Register(this);
+            Id = CssStyleBroker.Register(this);
+            Name = "generated-style-" + Id;
         }
 
         public string ToCss()
         {
-            return CssStyleBroker.WrapCssClassName(this, string.Format("background: url(\"{0}\");", GlyphImage.AbsoluteUri));
+            return this.WrapCssClassName(string.Format("background: url(\"{0}\");", GlyphImage.AbsoluteUriString()));
         }
     }
 }

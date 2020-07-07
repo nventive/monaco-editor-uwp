@@ -1,211 +1,123 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DD49485C-2D9B-4824-B64E-52193B43E4CB}</ProjectGuid>
-    <OutputType>winmdobj</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Monaco</RootNamespace>
-    <AssemblyName>MonacoEditorComponent</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
-    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AllowCrossPlatformRetargeting>false</AllowCrossPlatformRetargeting>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Monaco.xml</DocumentationFile>
-    <GenerateLibraryLayout>false</GenerateLibraryLayout>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
-    <PlatformTarget>ARM</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
-    <PlatformTarget>ARM</PlatformTarget>
-    <OutputPath>bin\ARM\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>bin\x64\Debug\Monaco.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>bin\x64\Release\Monaco.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="CodeEditor.cs" />
-    <Compile Include="CodeEditor.Methods.cs" />
-    <Compile Include="CodeEditor.Properties.cs" />
-    <Compile Include="Extensions\WebViewExtensions.cs" />
-    <Compile Include="Helpers\DebugLogger.cs" />
-    <Compile Include="Helpers\DispatcherTaskExtensions.cs" />
-    <Compile Include="Helpers\InterfaceToClassConverter.cs" />
-    <Compile Include="Helpers\KeyboardListener.cs" />
-    <Compile Include="Helpers\ParentAccessor.cs" />
-    <Compile Include="Helpers\ThemeListener.cs" />
-    <Compile Include="Monaco\Editor\ContextKey.cs" />
-    <Compile Include="Monaco\Editor\IContextKey.cs" />
-    <Compile Include="Monaco\Editor\IEditorConstructionOptions.cs" />
-    <Compile Include="Monaco\Editor\IActionDescriptor.cs" />
-    <Compile Include="Monaco\Editor\IEditorFindOptions.cs" />
-    <Compile Include="Monaco\Editor\IEditorMinimapOptions.cs" />
-    <Compile Include="Monaco\Editor\IEditorOptions.cs" />
-    <Compile Include="Monaco\Editor\IEditorScrollbarOptions.cs" />
-    <Compile Include="Monaco\Editor\IMarker.cs" />
-    <Compile Include="Monaco\Editor\IMarkerData.cs" />
-    <Compile Include="Monaco\Editor\IModel.cs" />
-    <Compile Include="Monaco\Editor\IModelDecorationOptions.cs" />
-    <Compile Include="Monaco\Editor\IModelDeltaDecoration.cs" />
-    <Compile Include="Monaco\Editor\Marker.cs" />
-    <Compile Include="Monaco\Editor\MarkerData.cs" />
-    <Compile Include="Monaco\Editor\TrackedRangeStickiness.cs" />
-    <Compile Include="Monaco\Editor\WordAtPosition.cs" />
-    <Compile Include="Monaco\Editor\IWordAtPosition.cs" />
-    <Compile Include="Monaco\Helpers\CssInlineStyle.cs" />
-    <Compile Include="Monaco\Helpers\CssLineStyle.cs" />
-    <Compile Include="Monaco\Helpers\CssStyleBroker.cs" />
-    <Compile Include="Monaco\Helpers\Json.cs" />
-    <Compile Include="Monaco\IMarkdownString.cs" />
-    <Compile Include="Monaco\IPosition.cs" />
-    <Compile Include="Monaco\IRange.cs" />
-    <Compile Include="Monaco\KeyCode.cs" />
-    <Compile Include="Monaco\KeyMod.cs" />
-    <Compile Include="Monaco\Languages\Command.cs" />
-    <Compile Include="Monaco\Languages\CompletionContext.cs" />
-    <Compile Include="Monaco\Languages\CompletionItem.cs" />
-    <Compile Include="Monaco\Languages\CompletionItemKind.cs" />
-    <Compile Include="Monaco\Languages\CompletionItemProvider.cs" />
-    <Compile Include="Monaco\Languages\CompletionList.cs" />
-    <Compile Include="Monaco\Languages\Hover.cs" />
-    <Compile Include="Monaco\Languages\HoverProvider.cs" />
-    <Compile Include="Monaco\Languages\ILanguageExtensionPoint.cs" />
-    <Compile Include="Monaco\LanguagesHelper.cs" />
-    <Compile Include="Monaco\Languages\SnippetString.cs" />
-    <Compile Include="Monaco\Languages\SuggestTriggerKind.cs" />
-    <Compile Include="Monaco\ModelHelper.cs" />
-    <Compile Include="Monaco\Position.cs" />
-    <Compile Include="Monaco\Range.cs" />
-    <Compile Include="Monaco\Selection.cs" />
-    <Compile Include="Monaco\Severity.cs" />
-    <Compile Include="Monaco\IUri.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>5.2.3</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>10.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="Nito.AsyncEx">
-      <Version>5.0.0-pre-02</Version>
-    </PackageReference>
-    <PackageReference Include="ObservableVector">
-      <Version>2.1.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MonacoEditor.html" />
-    <Content Include="monaco-editor\*.*" />
-    <Content Include="monaco-editor\min\**\*.*" />
-    <Compile Include="Monaco\Helpers\CssGlyphStyle.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CodeEditor.Events.cs" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
-    <VisualStudioVersion>14.0</VisualStudioVersion>
-  </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
+	<PropertyGroup>
+		<TargetFrameworks>uap10.0.16299;netstandard2.0</TargetFrameworks>
+		<!--<TargetFrameworks>uap10.0.16299;</TargetFrameworks>-->
+		<!--<TargetFrameworks>netstandard2.0;</TargetFrameworks>-->
+		<Title>MonacoEditorComponent</Title>
+		<NoWarn>$(NoWarn);Uno0001</NoWarn>
+		<PackageId>Uno.Monaco.Editor</PackageId>
+		<LangVersion>8.0</LangVersion>
+		<Version>0.0.5</Version>
+		<!-- Ensures the .xr.xml files are generated in a proper layout folder --> 
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<NuspecProperties>version=$(Version);configuration=$(Configuration)</NuspecProperties>
+
+		<IsWindows>$(TargetFramework.StartsWith('uap'))</IsWindows>
+		<NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
+</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsWindows)' == 'true'">
+		<OutputType>winmdobj</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>Monaco</RootNamespace>
+		<AssemblyName>MonacoEditorComponent</AssemblyName>
+		<DefaultLanguage>en-US</DefaultLanguage>
+		<TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+		<MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+		<FileAlignment>512</FileAlignment>
+		<AllowCrossPlatformRetargeting>false</AllowCrossPlatformRetargeting>
+		<DefineConstants>$(DefineConstants);NETFX_CORE;WINDOWS_UWP</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+		<TypeScriptSourceMap>true</TypeScriptSourceMap>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+		<TypeScriptSourceMap>false</TypeScriptSourceMap>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+		<MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug\</OutputPath>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+
+	<ItemGroup>
+
+
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Condition="'$(IsWindows)' == 'true'">
+			<Version>3.8.3</Version>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+
+		<PackageReference Include="Newtonsoft.Json">
+			<Version>12.0.3</Version>
+		</PackageReference>
+		<PackageReference Include="Nito.AsyncEx">
+			<Version>5.0.0</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETStandard'">
+		<PackageReference Include="Uno.UI" Version="2.4.4" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IsWindows)' == 'true'">
+		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+		<Version>6.2.10</Version>
+	</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="Themes\Generic.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<SubType>Designer</SubType>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="**\*.uwp.*" />
+		<Compile Remove="**\*.wasm.*" />
+		<None Remove="monaco-editor\**\*.*" />
+		<TypeScriptCompile Remove="monaco-editor\**\*.*" />
+		<Content Include="CodeEditor\CodeEditor.html" />
+		<Content Include="ts-helpermethods-wasm\tsconfig.json" />
+		<Content Include="ts-helpermethods\tsconfig.json" />
+		<Content Include="monaco-editor\*.*" />
+		<Content Include="monaco-editor\min\**\*.*" />
+		<Content Include="ts-helpermethods\*.js">
+			<DependentUpon>%(Filename).ts</DependentUpon>
+		</Content>
+		<None Remove="ts-helpermethods-wasm\tsconfig.json" />
+		<None Remove="ts-helpermethods\tsconfig.json" />
+		<EmbeddedResource Include="Properties\MonacoEditorComponent.rd.xml" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETStandard'">
+		<Compile Include="**\*.wasm.cs" /> 
+		<Content Include="ts-helpermethods\ts-helpermethods-wasm\*.js">
+			<DependentUpon>%(Filename).ts</DependentUpon>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IsWindows)' == 'true'">
+		<Compile Include="**\*.uwp.cs" />
+	</ItemGroup>
 </Project>

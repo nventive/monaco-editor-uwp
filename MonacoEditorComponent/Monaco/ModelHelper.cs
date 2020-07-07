@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Windows.Foundation;
 
@@ -11,14 +10,13 @@ namespace Monaco.Editor
     /// https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.imodel.html
     /// https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.itextmodel.html
     /// </summary>
-#pragma warning disable CS1591
     public sealed class ModelHelper : IModel
     {
-        private WeakReference<CodeEditor> _editor;
+        private readonly WeakReference<CodeEditor> _editor;
 
         public ModelHelper(CodeEditor editor)
         {
-            this._editor = new WeakReference<CodeEditor>(editor);
+            _editor = new WeakReference<CodeEditor>(editor);
         }
 
         public string Id => throw new NotImplementedException();
@@ -30,6 +28,58 @@ namespace Monaco.Editor
             if (_editor.TryGetTarget(out CodeEditor editor))
             {
                 return editor.InvokeScriptAsync("model.detectIndentationAsync", new object[] { defaultInsertSpaces, defaultTabSize }).AsAsyncAction();
+            }
+
+            return null;
+        }
+
+        public IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, bool searchOnlyEditableRange, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches)
+        {
+            // Default limit results: https://github.com/microsoft/vscode/blob/b2d0292a20c4a012005c94975019a5b572ce6a63/src/vs/editor/common/model/textModel.ts#L117
+            return FindMatchesAsync(searchString, searchOnlyEditableRange, isRegex, matchCase, wordSeparators, captureMatches, 999);
+        }
+
+        public IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, IRange searchScope, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches)
+        {
+            // Default limit results: https://github.com/microsoft/vscode/blob/b2d0292a20c4a012005c94975019a5b572ce6a63/src/vs/editor/common/model/textModel.ts#L117
+            return FindMatchesAsync(searchString, searchScope, isRegex, matchCase, wordSeparators, captureMatches, 999);
+        }
+
+        public IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, bool searchOnlyEditableRange, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches, double limitResultCount)
+        {
+            if (_editor.TryGetTarget(out CodeEditor editor))
+            {
+                return editor.InvokeScriptAsync<IEnumerable<FindMatch>>("model.findMatches", new object[] { searchString, searchOnlyEditableRange, isRegex, matchCase, wordSeparators, captureMatches, limitResultCount }).AsAsyncOperation();
+            }
+
+            return null;
+        }
+
+        public IAsyncOperation<IEnumerable<FindMatch>> FindMatchesAsync(string searchString, IRange searchScope, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches, double limitResultCount)
+        {
+            if (_editor.TryGetTarget(out CodeEditor editor))
+            {
+                return editor.InvokeScriptAsync<IEnumerable<FindMatch>>("model.findMatches", new object[] { searchString, searchScope, isRegex, matchCase, wordSeparators, captureMatches, limitResultCount }).AsAsyncOperation();
+            }
+
+            return null;
+        }
+
+        public IAsyncOperation<FindMatch> FindNextMatchAsync(string searchString, IPosition searchStart, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches)
+        {
+            if (_editor.TryGetTarget(out CodeEditor editor))
+            {
+                return editor.InvokeScriptAsync<FindMatch>("model.findNextMatch", new object[] { searchString, searchString, isRegex, matchCase, wordSeparators, captureMatches }).AsAsyncOperation();
+            }
+
+            return null;
+        }
+
+        public IAsyncOperation<FindMatch> FindPreviousMatchAsync(string searchString, IPosition searchStart, bool isRegex, bool matchCase, string wordSeparators, bool captureMatches)
+        {
+            if (_editor.TryGetTarget(out CodeEditor editor))
+            {
+                return editor.InvokeScriptAsync<FindMatch>("model.findPreviousMatch", new object[] { searchString, searchString, isRegex, matchCase, wordSeparators, captureMatches }).AsAsyncOperation();
             }
 
             return null;
@@ -260,21 +310,22 @@ namespace Monaco.Editor
             return null;
         }
 
-        public IAsyncOperation<IWordAtPosition> GetWordAtPositionAsync(IPosition position)
+        // TODO: Need to investigate why with .NET Native the InterfaceToClassConverter isn't working anymore?
+        public IAsyncOperation<WordAtPosition> GetWordAtPositionAsync(IPosition position)
         {
             if (_editor.TryGetTarget(out CodeEditor editor))
             {
-                return editor.SendScriptAsync<IWordAtPosition>("model.getWordAtPosition(" + JsonConvert.SerializeObject(position) + ");").AsAsyncOperation();
+                return editor.SendScriptAsync<WordAtPosition>("model.getWordAtPosition(" + JsonConvert.SerializeObject(position) + ");").AsAsyncOperation();
             }
 
             return null;
         }
 
-        public IAsyncOperation<IWordAtPosition> GetWordUntilPositionAsync(IPosition position)
+        public IAsyncOperation<WordAtPosition> GetWordUntilPositionAsync(IPosition position)
         {
             if (_editor.TryGetTarget(out CodeEditor editor))
             {
-                return editor.SendScriptAsync<IWordAtPosition>("model.getWordUntilPosition(" + JsonConvert.SerializeObject(position) + ");").AsAsyncOperation();
+                return editor.SendScriptAsync<WordAtPosition>("model.getWordUntilPosition(" + JsonConvert.SerializeObject(position) + ");").AsAsyncOperation();
             }
 
             return null;
@@ -345,5 +396,4 @@ namespace Monaco.Editor
             return null;
         }
     }
-    #pragma warning restore CS1591
-}
+    }

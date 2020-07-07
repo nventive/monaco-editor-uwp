@@ -4,17 +4,16 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls;
 
 namespace Monaco.Extensions
 {
-    internal static class WebViewExtensions
+    internal static class ICodeEditorPresenterExtensions
     {
         public static async Task RunScriptAsync(
-            this WebView _view,
+            this ICodeEditorPresenter _view,
             string script,
             [CallerMemberName] string member = null,
             [CallerFilePath] string file = null,
@@ -24,7 +23,7 @@ namespace Monaco.Extensions
         }
 
         public static async Task<T> RunScriptAsync<T>(
-            this WebView _view, 
+            this ICodeEditorPresenter _view, 
             string script, 
             [CallerMemberName] string member = null,
             [CallerFilePath] string file = null,
@@ -34,14 +33,14 @@ namespace Monaco.Extensions
             if (typeof(T) != typeof(object))
             {
                 script = script.Trim(';');
-                start += "JSON.stringify(" + script + ");";
+                 start += "return JSON.stringify(" + script + ");";
             }
             else
             {
                 start += script;
             }
             var fullscript = start + 
-                "\n} catch (err) { JSON.stringify({ wv_internal_error: true, message: err.message, description: err.description, number: err.number, stack: err.stack }); }";
+                "\n} catch (err) { return JSON.stringify({ wv_internal_error: true, message: err.message, description: err.description, number: err.number, stack: err.stack }); }";
 
             if (_view.Dispatcher.HasThreadAccess)
             {
@@ -70,16 +69,22 @@ namespace Monaco.Extensions
             }
         }
 
-        private static async Task<T> RunScriptHelperAsync<T>(WebView _view, string script)
+        private static async Task<T> RunScriptHelperAsync<T>(ICodeEditorPresenter _view, string script)
         {            
             var returnstring = await _view.InvokeScriptAsync("eval", new string[] { script });
 
-            if (JsonObject.TryParse(returnstring, out JsonObject result))
+            //if (JsonObject.TryParse(returnstring, out JsonObject result))
+            //{
+            //    if (result.ContainsKey("wv_internal_error") && result["wv_internal_error"].ValueType == JsonValueType.Boolean && result["wv_internal_error"].GetBoolean())
+            //    {
+            //        throw new JavaScriptInnerException(result["message"].GetString(), result["stack"].GetString());
+            //    }
+            //}
+
+            // TODO: Need to decode the error correctly
+            if (returnstring.Contains("wv_internal_error"))
             {
-                if (result.ContainsKey("wv_internal_error") && result["wv_internal_error"].ValueType == JsonValueType.Boolean && result["wv_internal_error"].GetBoolean())
-                {
-                    throw new JavaScriptInnerException(result["message"].GetString(), result["stack"].GetString());
-                }
+                throw new JavaScriptInnerException(returnstring,"");
             }
 
             if (returnstring != null && returnstring != "null")
@@ -87,17 +92,17 @@ namespace Monaco.Extensions
                 return JsonConvert.DeserializeObject<T>(returnstring);
             }
 
-            return default(T);
+            return default;
         }
 
-        private static JsonSerializerSettings _settings = new JsonSerializerSettings()
+        private static readonly JsonSerializerSettings _settings = new JsonSerializerSettings()
         {
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         public static async Task InvokeScriptAsync(
-            this WebView _view,
+            this ICodeEditorPresenter _view,
             string method,
             object arg,
             bool serialize = true,
@@ -109,7 +114,7 @@ namespace Monaco.Extensions
         }
 
         public static async Task InvokeScriptAsync(
-            this WebView _view,
+            this ICodeEditorPresenter _view,
             string method,
             object[] args,
             bool serialize = true,
@@ -121,7 +126,7 @@ namespace Monaco.Extensions
         }
 
         public static async Task<T> InvokeScriptAsync<T>(
-            this WebView _view,
+            this ICodeEditorPresenter _view,
             string method,
             object arg,
             bool serialize = true,
@@ -133,7 +138,7 @@ namespace Monaco.Extensions
         }
 
         public static async Task<T> InvokeScriptAsync<T>(
-            this WebView _view,
+            this ICodeEditorPresenter _view,
             string method,
             object[] args,
             bool serialize = true,
@@ -143,33 +148,45 @@ namespace Monaco.Extensions
         {
             string[] sanitizedargs;
 
-            if (serialize)
+            try
             {
-                sanitizedargs = args.Select(item =>
+                System.Diagnostics.Debug.WriteLine($"Begin invoke script (serialize - {serialize})");
+                if (serialize)
                 {
-                    if (item is int || item is double)
+                    sanitizedargs = args.Select(item =>
                     {
-                        return item.ToString();
-                    }
-                    else if (item is string)
-                    {
-                        return JsonConvert.ToString(item);
-                    }
-                    else
-                    {
+                        if (item is int || item is double)
+                        {
+                            return item.ToString();
+                        }
+                        else if (item is string)
+                        {
+                            return JsonConvert.ToString(item);
+                        }
+                        else
+                        {
                         // TODO: Need JSON.parse?
                         return JsonConvert.SerializeObject(item, _settings);
-                    }
-                }).ToArray();
+                        }
+                    }).ToArray();
+                }
+                else
+                {
+                    sanitizedargs = args.Select(item => item.ToString()).ToArray();
+                }
+
+                var script = method + "(" + string.Join(",", sanitizedargs) + ");";
+
+                System.Diagnostics.Debug.WriteLine($"Script {script})");
+
+
+                return await RunScriptAsync<T>(_view, script, member, file, line);
             }
-            else
+            catch(Exception ex)
             {
-                sanitizedargs = args.Select(item => item.ToString()).ToArray();
+                System.Diagnostics.Debug.WriteLine($"Error {ex.Message} {ex.StackTrace} {ex.InnerException?.Message})");
+                return default(T);
             }
-
-            var script = method + "(" + string.Join(",", sanitizedargs) + ");";
-
-            return await RunScriptAsync<T>(_view, script, member, file, line);
         }
     }
 
@@ -186,10 +203,10 @@ namespace Monaco.Extensions
         public JavaScriptExecutionException(string member, string filename, int line, string script, Exception inner)
             : base("Error Executing JavaScript Code for " + member + "\nLine " + line + " of " + filename + "\n" + script + "\n", inner)
         {
-            this.Member = member;
-            this.FileName = filename;
-            this.LineNumber = line;
-            this.Script = script;
+            Member = member;
+            FileName = filename;
+            LineNumber = line;
+            Script = script;
         }
     }
 
@@ -200,7 +217,7 @@ namespace Monaco.Extensions
         public JavaScriptInnerException(string message, string stack)
             : base(message)
         {
-            this.JavaScriptStackTrace = stack;
+            JavaScriptStackTrace = stack;
         }
     }
 }

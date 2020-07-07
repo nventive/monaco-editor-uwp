@@ -14,11 +14,12 @@ namespace Monaco.Helpers
     /// Not Thread Safe.
     /// </summary>
     [AllowForWeb]
-    public sealed class ParentAccessor : IDisposable
+    public sealed partial class ParentAccessor : IDisposable
     {
-        private WeakReference<IParentAccessorAcceptor> parent;
-        private Type typeinfo;
+        private readonly WeakReference<IParentAccessorAcceptor> parent;
+        private readonly Type typeinfo;
         private Dictionary<string, Action> actions;
+        private Dictionary<string, Action<string[]>> action_parameters;
         private Dictionary<string, Func<string[], Task<string>>> events;
 
         private List<Assembly> Assemblies { get; set; } = new List<Assembly>();
@@ -32,8 +33,13 @@ namespace Monaco.Helpers
             this.parent = new WeakReference<IParentAccessorAcceptor>(parent);
             typeinfo = parent.GetType();
             actions = new Dictionary<string, Action>();
+            action_parameters = new Dictionary<string, Action<string[]>>();
             events = new Dictionary<string, Func<string[], Task<string>>>();
+
+            PartialCtor();
         }
+
+        partial void PartialCtor();
 
         /// <summary>
         /// Registers an action from the .NET side which can be called from within the JavaScript code.
@@ -43,6 +49,11 @@ namespace Monaco.Helpers
         internal void RegisterAction(string name, Action action)
         {
             actions[name] = action;
+        }
+
+        internal void RegisterActionWithParameters(string name, Action<string[]> action)
+        {
+            action_parameters[name] = action;
         }
 
         /// <summary>
@@ -56,19 +67,21 @@ namespace Monaco.Helpers
         }
 
         /// <summary>
-        /// Calls an Event registered before wit hthe <see cref="RegisterEvent(string, Func{string[], string})"/>.
+        /// Calls an Event registered before with the <see cref="RegisterEvent(string, Func{string[], Task{string}})"/>.
         /// </summary>
         /// <param name="name">Name of event to call.</param>
         /// <param name="parameters">JSON string Parameters.</param>
         /// <returns></returns>
         public IAsyncOperation<string> CallEvent(string name, [ReadOnlyArray] string[] parameters)
         {
+            System.Diagnostics.Debug.WriteLine($"Event {name}");
             if (events.ContainsKey(name))
             {
+                System.Diagnostics.Debug.WriteLine($"Parameters: {parameters != null} - {parameters?.Length.ToString() ?? "N/A"}");
                 return events[name]?.Invoke(parameters).AsAsyncOperation();
             }
 
-            return (new Task<string>(() => { return null; })).AsAsyncOperation();
+            return new Task<string>(() => { return null; }).AsAsyncOperation();
         }
 
         /// <summary>
@@ -90,6 +103,23 @@ namespace Monaco.Helpers
             if (actions.ContainsKey(name))
             {
                 actions[name]?.Invoke();
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Calls an Action registered before with <see cref="RegisterActionWithParameters(string, Action{string[]})"/>.
+        /// </summary>
+        /// <param name="name">String Key.</param>
+        /// <param name="parameters">Parameters to be passed to Action.</param>
+        /// <returns>True if method was found in registration.</returns>
+        public bool CallActionWithParameters(string name, [ReadOnlyArray] string[] parameters)
+        {
+            if (action_parameters.ContainsKey(name))
+            {
+                action_parameters[name]?.Invoke(parameters);
                 return true;
             }
 
@@ -119,12 +149,18 @@ namespace Monaco.Helpers
                 var propinfo = typeinfo.GetProperty(name);
                 var obj = propinfo?.GetValue(tobj);
 
-                return JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+                if (obj != null)
                 {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
+                    var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                    //System.Diagnostics.Debug.WriteLine($"Json Object - {json}");
+                    return json;
+                }
             }
 
+            //System.Diagnostics.Debug.WriteLine($"No Object");
             return "{}";
         }
 
